@@ -1,0 +1,4 @@
+secret_stuff/
+config.py
+__pycache__
+.ipynb_checkpoints
