@@ -57,11 +57,13 @@ fig = plt.figure()
 ax = fig.gca(projection='3d')
 for ind,fname in enumerate(fnames):
   df=pd.read_csv(fname)
-  if len(df)>1000:
+  if len(df)>100:
     step=100
+    alpha=0.6
   else:
     step=1
-  ax.plot_trisurf([df.x[i] for i in range(0,len(df),step)], [df.y[i] for i in range(0,len(df),step)], [df.z[i] for i in range(0,len(df),step)], linewidth=0.2, antialiased=True,alpha=0.5)
+    alpha=1
+  ax.plot_trisurf([df.x[i] for i in range(0,len(df),step)], [df.y[i] for i in range(0,len(df),step)], [df.z[i] for i in range(0,len(df),step)], linewidth=0.2, antialiased=True,alpha=alpha)
 
 
 plt.show()

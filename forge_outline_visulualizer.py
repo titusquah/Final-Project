@@ -10,4 +10,4 @@ for sr in test.shapeRecords():
         listx.append(xNew)
         listy.append(yNew)
 plt.plot(listx,listy)
-plt.show()
+plt.show()  
