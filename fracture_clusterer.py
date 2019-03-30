@@ -17,6 +17,9 @@ import pandas as pd
 from sklearn.cluster import DBSCAN
 
 fracts=pd.read_csv(r"C:\Users\tq220\Documents\Tits things\2018-2019\Data Science\Final-project-data\Data\surface_fractures_extended.csv",index_col=0)
+forge_outline=pd.read_csv(r"C:\Users\tq220\Documents\Tits things\2018-2019\Data Science\Final-project-data\Data\forge_vertices.csv",index_col=0)
+
+
 fr_x=fracts['x'].values
 fr_y=fracts['y'].values
 
@@ -27,11 +30,12 @@ X=np.array(X)
 #Z = linkage(X, 'ward') # generate the linkage array
 
 plt.close('all')
-db_model = DBSCAN(eps=100, min_samples=2)
+db_model = DBSCAN(eps=0.5, min_samples=4)
 db_model.fit(X)
 y_pred = db_model.fit_predict(X)
 
 plt.scatter(X[:, 0], X[:, 1],s=0.1, c=y_pred); 
+plt.plot(forge_outline['x'],forge_outline['y'])
 plt.show()
 
 #plt.figure(figsize=(25, 10))
