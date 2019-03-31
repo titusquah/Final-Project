@@ -71,21 +71,26 @@ for ind,fname in enumerate(fnames):
 #  else:
 #    step=1
 #    alpha=1
-  x=df[(df['x']>=332852.6298-es)&
-       (df['x']<=336116.8469+es)&
-       (df['y']>=4261250.737-es)&
-       (df['y']<=4264610.018+es)]['x']
-  y=df[(df['x']>=332852.6298-es)&
-       (df['x']<=336116.8469+es)&
-       (df['y']>=4261250.737-es)&
-       (df['y']<=4264610.018+es)]['y']
-  z=df[(df['x']>=332852.6298-es)&
-       (df['x']<=336116.8469+es)&
-       (df['y']>=4261250.737-es)&
-       (df['y']<=4264610.018+es)]['z']
+#  x=df[(df['x']>=332852.6298-es)&
+#       (df['x']<=336116.8469+es)&
+#       (df['y']>=4261250.737-es)&
+#       (df['y']<=4264610.018+es)]['x']
+#  y=df[(df['x']>=332852.6298-es)&
+#       (df['x']<=336116.8469+es)&
+#       (df['y']>=4261250.737-es)&
+#       (df['y']<=4264610.018+es)]['y']
+#  z=df[(df['x']>=332852.6298-es)&
+#       (df['x']<=336116.8469+es)&
+#       (df['y']>=4261250.737-es)&
+#       (df['y']<=4264610.018+es)]['z']
+  x=df['x']
+  y=df['y']
+  z=df['z']
 #  ax.plot_trisurf([df.x[i] for i in range(0,len(df),step)], [df.y[i] for i in range(0,len(df),step)], [df.z[i] for i in range(0,len(df),step)], linewidth=0.2, antialiased=True,alpha=alpha)
   if len(x)>1000:
     step=80
+  elif len(x)>10000:
+    step=1000
   else:
     step=1
   print(len(x[::step]))
@@ -106,10 +111,15 @@ ax.plot3D(x_bot, y_bot, z_bot, 'red')
 for i in range(len(x)):
   ax.plot3D([x[i],x_bot[i]], [y[i],y_bot[i]], [z[i],z_bot[i]], 'red')
 ax.plot3D(pts['x'],pts['y'],pts['z'])
-pts=ax.scatter3D(temps[(temps['T']>=175)&(temps['T']<=225)]['x'],
-                   temps[(temps['T']>=175)&(temps['T']<=225)]['y'],
-                   temps['z'][(temps['T']>=175)&(temps['T']<=225)],
-                   c=temps['T'][(temps['T']>=175)&(temps['T']<=225)],
+#pts=ax.scatter3D(temps[(temps['T']>=175)&(temps['T']<=225)]['x'],
+#                   temps[(temps['T']>=175)&(temps['T']<=225)]['y'],
+#                   temps['z'][(temps['T']>=175)&(temps['T']<=225)],
+#                   c=temps['T'][(temps['T']>=175)&(temps['T']<=225)],
+#                   cmap='inferno')
+pts=ax.scatter3D(temps['x'],
+                   temps['y'],
+                   temps['z'],
+                   c=temps['T'],
                    cmap='inferno')
 fig.colorbar(pts, shrink=0.5, aspect=5)
 plt.show()

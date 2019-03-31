@@ -27,7 +27,7 @@ X=np.array(X)
 #Z = linkage(X, 'ward') # generate the linkage array
 
 plt.close('all')
-db_model = DBSCAN(eps=100, min_samples=2)
+db_model = DBSCAN(eps=5, min_samples=2)
 db_model.fit(X)
 y_pred = db_model.fit_predict(X)
 
