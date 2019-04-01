@@ -21,40 +21,27 @@ fnames=[
     r"../../land_surface_vertices.csv",
     r"../../175C_vertices.csv",
     r"../../225C_vertices.csv",
+    r"../../well_location_from_earth_model.csv",
 #    r"C:\Users\tq220\Documents\Tits things\2018-2019\Data Science\Final-project-data\Data\forge_vertices.csv"
     ]
 
-z_names=['granite','land_surf','175c','225c' ]
-
+z_names=['granite','land_surf','175c','225c', 'x', 'y']
 
 g_df=pd.read_csv(fnames[0]) #granite
 l_df=pd.read_csv(fnames[1]) #land surface
 lt_df=pd.read_csv(fnames[2]) #low temp
 ut_df=pd.read_csv(fnames[3]) #high temp
+well_df=pd.read_csv(fnames[4]) #well location
 
 dfs=[g_df,l_df,lt_df,ut_df]
 
-
 #%%Interpolator function
-def vertices_interp(xi,yi): #takes in x and y value within data bounds and 
-#returns data frame with granite,landsurface and temperature z's
-  try:
-    n=len(xi)
-  except:
-    try:
-      int(xi)
-      n=1
-    except Exception as e:
-      print(e) 
-      raise
-  
-  df_ret = pd.DataFrame(index=np.arange(n),columns=z_names)
-  for ind,df in enumerate(dfs):
-    x=df['x']
-    y=df['y']
-    z=df['z']
-    vals = interpolate.griddata((x, y), z, (xi,yi))
-    df_ret[z_names[ind]]=vals
-  return df_ret
-  
-  
+def interpolated_sample():
+  df_ret = pd.DataFrame(index = np.arange(len(lt_df)), columns = z_names)
+  df_wells = pd.DataFrame(index = np.arange(len(well_df)), columns = z_names)
+  df_ret['x'], df_ret['y'], df_wells['x'], df_wells['y'] = lt_df['x'], lt_df['y'], well_df['x'], well_df['y']
+  for index, df in enumerate(dfs):
+    x, y, z = df['x'], df['y'], df['z']
+    df_ret[z_names[index]] = interpolate.griddata((x, y), z, (lt_df['x'], lt_df['y']))
+    df_wells[z_names[index]] = interpolate.griddata((x, y), z, (well_df['x'], well_df['y']))
+  return df_ret.append(df_wells).dropna()
