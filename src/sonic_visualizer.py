@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from pandas.plotting import scatter_matrix
-
+plt.close('all')
 df=pd.read_csv(r"../../58-32_sonic_log_data.csv")
-scatter_matrix(df)
+scatter_matrix(df[['Depth (m)','GTEM','ITT','TENS','DTCO', 'SPHI']])
 plt.show()

@@ -111,15 +111,15 @@ ax.plot3D(x_bot, y_bot, z_bot, 'red')
 for i in range(len(x)):
   ax.plot3D([x[i],x_bot[i]], [y[i],y_bot[i]], [z[i],z_bot[i]], 'red')
 ax.plot3D(pts['x'],pts['y'],pts['z'])
-#pts=ax.scatter3D(temps[(temps['T']>=175)&(temps['T']<=225)]['x'],
-#                   temps[(temps['T']>=175)&(temps['T']<=225)]['y'],
-#                   temps['z'][(temps['T']>=175)&(temps['T']<=225)],
-#                   c=temps['T'][(temps['T']>=175)&(temps['T']<=225)],
-#                   cmap='inferno')
-pts=ax.scatter3D(temps['x'],
-                   temps['y'],
-                   temps['z'],
-                   c=temps['T'],
+pts=ax.scatter3D(temps[(temps['T']>=175)&(temps['T']<=225)]['x'],
+                   temps[(temps['T']>=175)&(temps['T']<=225)]['y'],
+                   temps['z'][(temps['T']>=175)&(temps['T']<=225)],
+                   c=temps['T'][(temps['T']>=175)&(temps['T']<=225)],
                    cmap='inferno')
+#pts=ax.scatter3D(temps['x'],
+#                   temps['y'],
+#                   temps['z'],
+#                   c=temps['T'],
+#                   cmap='inferno')
 fig.colorbar(pts, shrink=0.5, aspect=5)
 plt.show()
