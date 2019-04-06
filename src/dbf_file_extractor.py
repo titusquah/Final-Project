@@ -1,31 +1,26 @@
-
-import matplotlib.pyplot as plt
-import shapefile
 import pandas as pd
+#from simpledbf import Dbf5
+import shapefile
 
 shpFilePath = r"C:\Users\tq220\Documents\Tits things\2018-2019\Data Science\Final-project-data\Data\Utah_FORGE_gravity.shp"
 
 line_dict={}
-df=pd.DataFrame(columns=['x','y'])
+#df=pd.DataFrame(columns=['x','y'])
 test = shapefile.Reader(shpFilePath)
 inds=[]
 listx=[]
 listy=[]
+cbga=[]
+
 for ind,sr in enumerate(test.shapeRecords()):
   inds.append(ind)
-  listx=[]
-  listy=[]
+  cbga.append(test.record(ind)[-2])
 #  print(sr.shape.points)
   for xNew,yNew in sr.shape.points:
 #    print(xNew)
     listx.append(xNew)
     listy.append(yNew)
-  df.loc['{0}'.format(ind)]=[listx,listy]
-#  plt.plot(listx,listy)
-#  line_dict['line{0}x'.format(ind)]=listx
-#  line_dict['line{0}y'.format(ind)]=listy
-  
-#df.to_csv('surface_fractures_group_by_shape.csv')
+    
+df=pd.DataFrame({'x':listx,'y':listy,'cbga':cbga})
 
-#plt.scatter(listx,listy,markersize=1)
-#plt.show()  
+df.to_csv('gravity_pts.csv')
