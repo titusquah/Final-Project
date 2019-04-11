@@ -17,8 +17,8 @@ maxy=max(surf_df['y'])
 
 water_df=pd.read_excel(r"C:\Users\tq220\Documents\Tits things\2018-2019\Data Science\Final-project-data\Data\FORGE_groundwater_tables.xlsx",header=7)
 water_df=water_df.set_index('Label1').dropna()[['Easting3', 'Northing','Land Elev (ft)', 'DTW (ft)4', 'Water Elev (ft)']]
-water_df=water_df[(water_df['DTW (ft)4']>0)&(water_df['Easting3']>minx)&(water_df['Easting3']<maxx)&\
-                  (water_df['Northing']>miny)&(water_df['Northing']<maxy)]
+#water_df=water_df[(water_df['DTW (ft)4']>0)&(water_df['Easting3']>minx)&(water_df['Easting3']<maxx)&\
+#                  (water_df['Northing']>miny)&(water_df['Northing']<maxy)]
 
 df=df[['UTM_E','UTM_N','DEPTH_M','WAT_TABLE','START_M','END_M','AVGTCU','UCGRAD']]
 df=df[(df['DEPTH_M'].notnull())|(df['START_M'].notnull())]
@@ -32,29 +32,40 @@ for i in range(len(df)):
     
 df['depth']=depth
 
-#h2o=df[['UTM_E','UTM_N','WAT_TABLE']]
-#h2o=h2o[(h2o['WAT_TABLE'].notnull())&(h2o['WAT_TABLE']!='Flowing')]
-##h2o=h2o[(h2o['UTM_E']>minx)&(h2o['UTM_E']<maxx)&(h2o['UTM_N']>miny)&(h2o['UTM_N']<maxy)]
-#h2o=h2o.astype(float).reset_index(drop=True)
-##h2o['z']=interpolate.griddata((surf_df['x'], surf_df['y']), surf_df['z'], (h2o['UTM_E'],h2o['UTM_N'] ))-h2o['WAT_TABLE']
+h2o=df[['UTM_E','UTM_N','WAT_TABLE']]
+h2o=h2o[(h2o['WAT_TABLE'].notnull())&(h2o['WAT_TABLE']!='Flowing')]
+#h2o=h2o[(h2o['UTM_E']>minx)&(h2o['UTM_E']<maxx)&(h2o['UTM_N']>miny)&(h2o['UTM_N']<maxy)]
+h2o=h2o.astype(float).reset_index(drop=True)
+#h2o['z']=interpolate.griddata((surf_df['x'], surf_df['y']), surf_df['z'], (h2o['UTM_E'],h2o['UTM_N'] ))-h2o['WAT_TABLE']
 
 atcu=df[['UTM_E','UTM_N','depth','AVGTCU']]
 atcu=atcu[(atcu['AVGTCU'].notnull())&(atcu['AVGTCU']!=0)].reset_index(drop=True)
 atcu=atcu[(atcu['UTM_E']>minx)&(atcu['UTM_E']<maxx)&(atcu['UTM_N']>miny)&(atcu['UTM_N']<maxy)] #thermal conductivity
 atcu['z']=interpolate.griddata((surf_df['x'], surf_df['y']), surf_df['z'], (atcu['UTM_E'],atcu['UTM_N'] ))-atcu['depth']
 
-
+x1=[]
+y1=[]
+z1=[]
+for i in range(len(h2o)):
+  x1.append(h2o['UTM_E'][i])
+  y1.append(h2o['UTM_N'][i])
+  z1.append(h2o['WAT_TABLE'][i])
+for i in range(len(water_df)):
+  x1.append(water_df['Easting3'][i])
+  y1.append(water_df['Northing'][i])
+  z1.append(water_df['DTW (ft)4'][i])
 
 ucg=df[['UTM_E','UTM_N','depth','UCGRAD']]
 ucg=ucg[(ucg['UCGRAD'].notnull())&(ucg['UCGRAD']!=0)].reset_index(drop=True)
 ucg=ucg[(ucg['UTM_E']>minx)&(ucg['UTM_E']<maxx)&(ucg['UTM_N']>miny)&(ucg['UTM_N']<maxy)] #thermal gradient
 ucg['z']=interpolate.griddata((surf_df['x'], surf_df['y']), surf_df['z'], (ucg['UTM_E'],ucg['UTM_N'] ))-ucg['depth']
 
-save1=pd.DataFrame({'x':water_df['Easting3'],'y':water_df['Northing'],'z':water_df['Water Elev (ft)']}).reset_index(drop=True)
-save2=pd.DataFrame({'x':atcu['UTM_E'],'y':atcu['UTM_N'],'z':atcu['z'],'thermal_conductivity':atcu['AVGTCU']}).reset_index(drop=True)
-save3=pd.DataFrame({'x':ucg['UTM_E'],'y':ucg['UTM_N'],'z':ucg['z'],'temp_gradient':ucg['UCGRAD']}).reset_index(drop=True)
+save1=pd.DataFrame({'x':x1,'y':y1,'z':z1}).reset_index(drop=True)
+save2=pd.DataFrame({'x':atcu['UTM_E'],'y':atcu['UTM_N'],'depth':atcu['depth'],'z':atcu['z'],'thermal_conductivity':atcu['AVGTCU']}).reset_index(drop=True)
+save3=pd.DataFrame({'x':ucg['UTM_E'],'y':ucg['UTM_N'],'depth':ucg['depth'],'z':ucg['z'],'temp_gradient':ucg['UCGRAD']}).reset_index(drop=True)
 
-save1.to_csv('water_table_pts.csv')
-save2.to_csv('thermal_conductivity_pts.csv')
-save3.to_csv('temp_gradient_pts.csv')
+
+save1.to_csv('all_water_table_pts.csv')
+#save2.to_csv('thermal_conductivity_pts.csv')
+#save3.to_csv('temp_gradient_pts.csv')
 
